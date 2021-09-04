@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>剪映導出 SRT 字幕工具</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container mt-3">
+        <h1>剪映導出 SRT 字幕工具</h1>
+
+        <div class="form-group mb-3">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="draftContent" name="draftContent"
+                    accept="application/json">
+                <label for="draftContent" class="custom-file-label" data-browse="瀏覽">選擇剪映 draft_content.json 檔</label>
+            </div>
+            <small id="emailHelp" class="form-text text-muted">檔案位於 C:\Users\您的使用者名稱\AppData\Local\JianyingPro\User
+                Data\Projects\com.lveditor.draft\專案資料夾</small>
+        </div>
+
+        <div class="form-froup mb-3">
+            <label for="result">產生結果（SRT）：</label>
+            <textarea id="result" class="form-control" name="result" cols="30" rows="10"></textarea>
+        </div>
+        <button id="downloadSRT" class="btn btn-primary btn-block mb-3">下載</button>
+
+        <div class="form-froup mb-3">
+            <label for="result_txt">產生結果（TXT）：</label>
+            <textarea id="result_txt" class="form-control" name="result_txt" cols="30" rows="10"></textarea>
+        </div>
+        <button id="downloadTXT" class="btn btn-primary btn-block mb-3">下載</button>
+
+        <p class="text-center"><a href="https://xstar.me">&copy; 2021 XSTAR Studio</a></p>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script src="https://unpkg.com/file-saver@2.0.4/dist/FileSaver.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            bsCustomFileInput.init()
+        })
+
+        function onChange(event) {
+            var reader = new FileReader();
+            reader.onload = onReaderLoad;
+            reader.readAsText(event.target.files[0]);
+        }
+
+        function onReaderLoad(event) {
+            try {
+                var obj = JSON.parse(event.target.result);
+                obj.materials.texts.forEach((element, idx) => {
+                    console.log(idx + 1);
+                    document.getElementById("result").value += idx + 1
+                    document.getElementById("result").value += "\n"
+                    time_range = obj.tracks[1].segments[idx].target_timerange
+                    t = time_range.start
+                    ans = t / 1000000
+
+                    h = ('00' + (ans / 3600 % 60).toFixed()).slice(-2)
+                    m = ('00' + (ans / 60 % 60).toFixed()).slice(-2)
+                    s = ('00' + (ans % 60).toFixed()).slice(-2)
+                    ms = ('000' + (t % 1000000 / 1000).toFixed()).slice(-3)
+
+                    t2 = time_range.start + time_range.duration
+                    ans2 = t2 / 1000000
+                    h2 = ('00' + (ans2 / 3600 % 60).toFixed()).slice(-2)
+                    m2 = ('00' + (ans2 / 60 % 60).toFixed()).slice(-2)
+                    s2 = ('00' + (ans2 % 60).toFixed()).slice(-2)
+                    ms2 = ('000' + (t2 % 1000000 / 1000).toFixed()).slice(-3)
+
+
+                    document.getElementById("result").value += `${h}:${m}:${s},${ms} --> ${h2}:${m2}:${s2},${ms2}`
+                    document.getElementById("result").value += "\n"
+                    document.getElementById("result").value += (element.content)
+                    document.getElementById("result_txt").value += (element.content)
+                    document.getElementById("result").value += "\n\n"
+                    document.getElementById("result_txt").value += "\n"
+                });
+            } catch {
+                alert("檔案格式不符")
+            }
+        }
+
+        document.getElementById('draftContent').addEventListener('change', onChange);
+
+        document.getElementById("downloadSRT").addEventListener("click", e => {
+            var datetimeToday = new Date();
+            var blob = new Blob([document.getElementById("result").value], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, `${datetimeToday.getFullYear()}-${datetimeToday.getMonth()}-${datetimeToday.getDate()}.srt`);
+        });
+
+        document.getElementById("downloadTXT").addEventListener("click", e => {
+            var datetimeToday = new Date();
+            var blob = new Blob([document.getElementById("result_txt").value], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, `${datetimeToday.getFullYear()}-${datetimeToday.getMonth()}-${datetimeToday.getDate()}.txt`);
+        });
+    </script>
+</body>
+
+</html>
