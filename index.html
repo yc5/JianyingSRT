@@ -67,23 +67,15 @@
                     document.getElementById("result").value += idx + 1
                     document.getElementById("result").value += "\n"
                     time_range = obj.tracks[1].segments[idx].target_timerange
-                    t = time_range.start
-                    ans = t / 1000000
-
-                    h = ('00' + (ans / 3600 % 60).toFixed()).slice(-2)
-                    m = ('00' + (ans / 60 % 60).toFixed()).slice(-2)
-                    s = ('00' + (ans % 60).toFixed()).slice(-2)
-                    ms = ('000' + (t % 1000000 / 1000).toFixed()).slice(-3)
+                    t1 = time_range.start
+                    t1 = t1 / 10 ** 6
+                    t1 = new Date(t1 * 1000).toISOString().substr(11, 12)
 
                     t2 = time_range.start + time_range.duration
-                    ans2 = t2 / 1000000
-                    h2 = ('00' + (ans2 / 3600 % 60).toFixed()).slice(-2)
-                    m2 = ('00' + (ans2 / 60 % 60).toFixed()).slice(-2)
-                    s2 = ('00' + (ans2 % 60).toFixed()).slice(-2)
-                    ms2 = ('000' + (t2 % 1000000 / 1000).toFixed()).slice(-3)
+                    t2 = t2 / 10 ** 6
+                    t2 = new Date(t2 * 1000).toISOString().substr(11, 12)
 
-
-                    document.getElementById("result").value += `${h}:${m}:${s},${ms} --> ${h2}:${m2}:${s2},${ms2}`
+                    document.getElementById("result").value += `${t1} --> ${t2}`
                     document.getElementById("result").value += "\n"
                     document.getElementById("result").value += (element.content)
                     document.getElementById("result_txt").value += (element.content)
@@ -100,13 +92,13 @@
         document.getElementById("downloadSRT").addEventListener("click", e => {
             var datetimeToday = new Date();
             var blob = new Blob([document.getElementById("result").value], { type: "text/plain;charset=utf-8" });
-            saveAs(blob, `${datetimeToday.getFullYear()}-${datetimeToday.getMonth()}-${datetimeToday.getDate()}.srt`);
+            saveAs(blob, `${datetimeToday.getFullYear()}-${datetimeToday.getMonth() + 1}-${datetimeToday.getDate()}.srt`);
         });
 
         document.getElementById("downloadTXT").addEventListener("click", e => {
             var datetimeToday = new Date();
             var blob = new Blob([document.getElementById("result_txt").value], { type: "text/plain;charset=utf-8" });
-            saveAs(blob, `${datetimeToday.getFullYear()}-${datetimeToday.getMonth()}-${datetimeToday.getDate()}.txt`);
+            saveAs(blob, `${datetimeToday.getFullYear()}-${datetimeToday.getMonth() + 1}-${datetimeToday.getDate()}.txt`);
         });
     </script>
 </body>
