@@ -38,6 +38,7 @@
 
         <p class="text-center">
             <a href="https://xstar.me">&copy; 2021 XSTAR Studio</a>
+            <a href="https://lv.ulikecam.com/" target="_blank">剪映官網</a>
             <a href="https://github.com/yc5/JianyingSRT" target="_blank">Github</a>
         </p>
     </div>
@@ -71,12 +72,12 @@
                     document.getElementById("result").value += "\n"
                     time_range = obj.tracks[1].segments[idx].target_timerange
                     t1 = time_range.start
-                    t1 = t1 / 10 ** 6
-                    t1 = new Date(t1 * 1000).toISOString().substr(11, 12)
+                    t1 = t1 / 10 ** 3
+                    t1 = new Date(t1).toISOString().substr(11, 12)
 
                     t2 = time_range.start + time_range.duration
-                    t2 = t2 / 10 ** 6
-                    t2 = new Date(t2 * 1000).toISOString().substr(11, 12)
+                    t2 = t2 / 10 ** 3
+                    t2 = new Date(t2).toISOString().substr(11, 12)
 
                     document.getElementById("result").value += `${t1} --> ${t2}`
                     document.getElementById("result").value += "\n"
