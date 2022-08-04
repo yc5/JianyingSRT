@@ -81,8 +81,8 @@
 
                     document.getElementById("result").value += `${t1} --> ${t2}`
                     document.getElementById("result").value += "\n"
-                    document.getElementById("result").value += (element.content)
-                    document.getElementById("result_txt").value += (element.content)
+                    document.getElementById("result").value += (element.content.split("[")[1].split("]")[0])
+                    document.getElementById("result_txt").value += (element.content.split("[")[1].split("]")[0])
                     document.getElementById("result").value += "\n\n"
                     document.getElementById("result_txt").value += "\n"
                 });
