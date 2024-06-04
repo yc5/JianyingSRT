@@ -29,6 +29,10 @@
             <textarea id="result" class="form-control" name="result" cols="30" rows="10"></textarea>
         </div>
         <button id="downloadSRT" class="btn btn-primary btn-block mb-3">下載</button>
+        <button id="traditionalize" class="btn btn-secondary btn-block mb-3">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true" style="display: none"></span>
+            <span role="status">使用繁化姬簡轉繁</span>
+        </button>
 
         <div class="form-froup mb-3">
             <label for="result_txt">產生結果（TXT）：</label>
@@ -39,6 +43,7 @@
         <p class="text-center">
             <a href="https://xstar.me">&copy; 2024 XSTAR Studio</a>
             <a href="https://lv.ulikecam.com/" target="_blank">剪映官網</a>
+            <a href="https://zhconvert.org/" target="_blank">繁化姬</a>
             <a href="https://github.com/yc5/JianyingSRT" target="_blank">Github</a>
         </p>
     </div>
@@ -63,11 +68,18 @@
             reader.readAsText(event.target.files[0]);
         }
 
+        var obj, textArray = [];
+
         function onReaderLoad(event) {
+            obj = JSON.parse(event.target.result)
+            renderObjToResult(obj, false)
+        }
+
+        function renderObjToResult(obj, translated = false) {
             try {
-                var obj = JSON.parse(event.target.result);
+                document.getElementById("result").value = ""
+                document.getElementById("result_txt").value = ""
                 obj.materials.texts.forEach((element, idx) => {
-                    console.log(idx + 1);
                     document.getElementById("result").value += idx + 1
                     document.getElementById("result").value += "\n"
                     time_range = obj.tracks[1].segments[idx].target_timerange
@@ -81,7 +93,13 @@
 
                     document.getElementById("result").value += `${t1} --> ${t2}`
                     document.getElementById("result").value += "\n"
-                    const text = JSON.parse(element.content).text
+                    let text = ""
+                    if (!translated) {
+                        text = JSON.parse(element.content).text
+                        textArray.push(text)
+                    } else {
+                        text = textArray[idx]
+                    }
                     document.getElementById("result").value += text
                     document.getElementById("result_txt").value += text
                     document.getElementById("result").value += "\n\n"
@@ -105,6 +123,37 @@
             var blob = new Blob([document.getElementById("result_txt").value], { type: "text/plain;charset=utf-8" });
             saveAs(blob, `${datetimeToday.getFullYear()}-${datetimeToday.getMonth() + 1}-${datetimeToday.getDate()}.txt`);
         });
+
+        document.getElementById("traditionalize").addEventListener("click", e => {
+            e.target.firstElementChild.style.display = "inline-block";
+            zhconvert(document.getElementById("result_txt").value, "Traditional").then(json => {
+                textArray = json.data.text.split("\n")
+            }).then(() => {
+                renderObjToResult(obj, true)
+            }).catch(err => {
+                alert("抱歉，翻譯服務正在維護中。")
+            }).finally(() => {
+                e.target.firstElementChild.style.display = "none";
+            })
+        });
+
+        async function zhconvert(text, converter) {
+            const API = "https://xstar.me/api/zhconvert"
+            const data = {
+                "text": text,
+                "converter": converter
+            }
+            const response = await fetch(API, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+            return response.json();
+        }
+
+
     </script>
 
     <!-- Google tag (gtag.js) -->
