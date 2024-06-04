@@ -81,8 +81,9 @@
 
                     document.getElementById("result").value += `${t1} --> ${t2}`
                     document.getElementById("result").value += "\n"
-                    document.getElementById("result").value += (element.content.split("[")[1].split("]")[0])
-                    document.getElementById("result_txt").value += (element.content.split("[")[1].split("]")[0])
+                    const text = JSON.parse(element.content).text
+                    document.getElementById("result").value += text
+                    document.getElementById("result_txt").value += text
                     document.getElementById("result").value += "\n\n"
                     document.getElementById("result_txt").value += "\n"
                 });
@@ -105,15 +106,15 @@
             saveAs(blob, `${datetimeToday.getFullYear()}-${datetimeToday.getMonth() + 1}-${datetimeToday.getDate()}.txt`);
         });
     </script>
-    
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EK19XRR6P6"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-      gtag('config', 'G-EK19XRR6P6');
+        gtag('config', 'G-EK19XRR6P6');
     </script>
 </body>
 
