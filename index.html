@@ -34,7 +34,7 @@
             <textarea id="result" class="form-control" name="result" cols="30" rows="10"></textarea>
         </div>
         <button id="downloadSRT" class="btn btn-primary btn-block mb-3">下載</button>
-        <button id="traditionalize" class="btn btn-secondary btn-block mb-3">
+        <button id="traditionalize1" class="btn btn-secondary btn-block mb-3">
             <span class="spinner-border spinner-border-sm" aria-hidden="true" style="display: none"></span>
             <span role="status">使用繁化姬簡轉繁</span>
         </button>
@@ -44,6 +44,10 @@
             <textarea id="result_txt" class="form-control" name="result_txt" cols="30" rows="10"></textarea>
         </div>
         <button id="downloadTXT" class="btn btn-primary btn-block mb-3">下載</button>
+        <button id="traditionalize2" class="btn btn-secondary btn-block mb-3">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true" style="display: none"></span>
+            <span role="status">使用繁化姬簡轉繁</span>
+        </button>
 
         <p class="text-center">
             <a href="https://xstar.me">&copy; 2024 XSTAR Studio</a>
@@ -129,8 +133,28 @@
             saveAs(blob, `${datetimeToday.getFullYear()}-${datetimeToday.getMonth() + 1}-${datetimeToday.getDate()}.txt`);
         });
 
-        document.getElementById("traditionalize").addEventListener("click", e => {
-            e.target.firstElementChild.style.display = "inline-block";
+        document.getElementById("traditionalize1").addEventListener("click", function (event) {
+            handleTraditionalize(this, "result")
+        });
+        document.getElementById("traditionalize2").addEventListener("click", function (event) {
+            handleTraditionalize(this, "result_txt")
+        });
+
+        function handleTraditionalize(btnElement, textareaId) {
+            btnElement.querySelector(".spinner-border").style.display = "inline-block";
+            const textareaElement = document.getElementById(textareaId)
+            const originalValue = textareaElement.value;
+            zhconvert(originalValue, "Traditional").then(json => {
+                textareaElement.value = json.data.text
+            }).catch(err => {
+                alert("抱歉，翻譯服務正在維護中。")
+            }).finally(() => {
+                btnElement.querySelector(".spinner-border").style.display = "none";
+            })
+        }
+
+        function handleTraditionalizeBoth(event) {
+            event.target.firstElementChild.style.display = "inline-block";
             zhconvert(document.getElementById("result_txt").value, "Traditional").then(json => {
                 textArray = json.data.text.split("\n")
             }).then(() => {
@@ -138,9 +162,9 @@
             }).catch(err => {
                 alert("抱歉，翻譯服務正在維護中。")
             }).finally(() => {
-                e.target.firstElementChild.style.display = "none";
+                event.target.firstElementChild.style.display = "none";
             })
-        });
+        }
 
         async function zhconvert(text, converter) {
             const API = "https://xstar.me/api/zhconvert"
