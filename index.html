@@ -29,25 +29,30 @@
                 Data\Projects\com.lveditor.draft\專案資料夾</small>
         </div>
 
-        <div class="form-froup mb-3">
-            <label for="result">產生結果（SRT）：</label>
-            <textarea id="result" class="form-control" name="result" cols="30" rows="10"></textarea>
+        <div class="row">
+            <div class="col-md">
+                <div class="form-froup mb-3">
+                    <label for="result">產生結果（SRT）：</label>
+                    <textarea id="result" class="form-control" name="result" cols="30" rows="20"></textarea>
+                </div>
+                <button id="downloadSRT" class="btn btn-primary btn-block mb-3">下載</button>
+                <button id="traditionalize1" class="btn btn-secondary btn-block mb-3">
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true" style="display: none"></span>
+                    <span role="status">使用繁化姬簡轉繁</span>
+                </button>
+            </div>
+            <div class="col-md">
+                <div class="form-froup mb-3">
+                    <label for="result_txt">產生結果（TXT）：</label>
+                    <textarea id="result_txt" class="form-control" name="result_txt" cols="30" rows="20"></textarea>
+                </div>
+                <button id="downloadTXT" class="btn btn-primary btn-block mb-3">下載</button>
+                <button id="traditionalize2" class="btn btn-secondary btn-block mb-3">
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true" style="display: none"></span>
+                    <span role="status">使用繁化姬簡轉繁</span>
+                </button>
+            </div>
         </div>
-        <button id="downloadSRT" class="btn btn-primary btn-block mb-3">下載</button>
-        <button id="traditionalize1" class="btn btn-secondary btn-block mb-3">
-            <span class="spinner-border spinner-border-sm" aria-hidden="true" style="display: none"></span>
-            <span role="status">使用繁化姬簡轉繁</span>
-        </button>
-
-        <div class="form-froup mb-3">
-            <label for="result_txt">產生結果（TXT）：</label>
-            <textarea id="result_txt" class="form-control" name="result_txt" cols="30" rows="10"></textarea>
-        </div>
-        <button id="downloadTXT" class="btn btn-primary btn-block mb-3">下載</button>
-        <button id="traditionalize2" class="btn btn-secondary btn-block mb-3">
-            <span class="spinner-border spinner-border-sm" aria-hidden="true" style="display: none"></span>
-            <span role="status">使用繁化姬簡轉繁</span>
-        </button>
 
         <p class="text-center">
             <a href="https://xstar.me">&copy; 2024 XSTAR Studio</a>
